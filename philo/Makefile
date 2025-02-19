@@ -1,22 +1,23 @@
-CC = gcc
-CFLAGS = -Wall -pthread -I./include
-SRC_DIR = sources
-OBJ_DIR = obj
-SRC = $(wildcard $(SRC_DIR)/*.c)
-OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-EXEC = philo
+NAME = philo
+CC = cc
+CFLAGS = -Wall -Wextra -Werror
+SRCS = sources/main.c sources/dining_table.c sources/philo.c sources/philo_utils.c sources/philo_utils2.c sources/dining_table_utils.c
+OBJS = $(SRCS:.c=.o)
 
-# Rule to build the final executable
-$(EXEC): $(OBJ)
-	$(CC) $(OBJ) -o $(EXEC)
+all: $(NAME)
 
-# Rule to build object files
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(OBJ_DIR)  # Create obj directory if it doesn't exist
+$(OBJS): %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Clean the object files and executable
-clean:
-	rm -rf $(OBJ_DIR) $(EXEC)
+$(NAME): $(OBJS)
+	$(CC) $(OBJS) -o $(NAME)
 
-.PHONY: clean
+clean:
+	rm -f $(OBJS) $(NAME)
+
+fclean: clean
+	rm -f $(NAME)
+
+re: fclean all
+
+.PHONY: all clean fclean re
